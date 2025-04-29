@@ -16,6 +16,30 @@
     }
   },
   {
+    "name": "glm",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/g-truc/glm.git",
+      "revision": "1.0.0"
+    }
+  },
+  {
+    "name": "taskflow",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/taskflow/taskflow.git",
+      "revision": "v3.8.0"
+    }
+  },
+  {
+    "name": "imgui",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/ocornut/imgui.git",
+      "revision": "v1.91.9b"
+    }
+  },
+  {
     "name": "bistro/Exterior",
     "source": {
       "type": "archive",

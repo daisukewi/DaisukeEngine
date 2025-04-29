@@ -4,6 +4,6 @@ project(Engine)
 
 include(../CMake/CommonMacros.txt)
 
-SETUP_APP(Daisuke_Engine "DaisukeEngine")
+SETUP_APP(Engine "DaisukeEngine")
 
-target_link_libraries(Daisuke_Engine SharedUtils)
+target_link_libraries(Engine SharedUtils)
