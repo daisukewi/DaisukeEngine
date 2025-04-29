@@ -1,8 +1,65 @@
 cmake_minimum_required(VERSION 3.31)
-project(DaisukeEngine)
 
-include(CMake/CommonMacros.txt)
+project(DaisukeEngine CXX C)
+
 set(CMAKE_CXX_STANDARD 26)
 
-SETUP_APP(Daisuke_Engine "DaisukeEngine")
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(DKENGINE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(DKENGINE_DEPS_CACHE_FILE "${DKENGINE_ROOT_DIR}/dependencies/.bootstrap.json")
+
+if($ENV{CLION_IDE})
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${DKENGINE_ROOT_DIR})
+endif()
+
+find_package(Python3 COMPONENTS Interpreter)
+
+execute_process(COMMAND ${Python3_EXECUTABLE} deploy_deps.py WORKING_DIRECTORY ${DKENGINE_ROOT_DIR} COMMAND_ERROR_IS_FATAL ANY)
+execute_process(COMMAND ${Python3_EXECUTABLE} deploy_deps.py WORKING_DIRECTORY ${DKENGINE_ROOT_DIR}/dependencies/src/vulkan COMMAND_ERROR_IS_FATAL ANY)
+
+add_custom_command(COMMAND ${Python3_EXECUTABLE} deploy_deps.py OUTPUT ${DKENGINE_DEPS_CACHE_FILE}
+        DEPENDS "${DKENGINE_ROOT_DIR}/dependencies/bootstrap.json" WORKING_DIRECTORY ${DKENGINE_ROOT_DIR})
+add_custom_target(Dependencies DEPENDS ${DKENGINE_DEPS_CACHE_FILE})
+set_property(TARGET Dependencies PROPERTY FOLDER "third-party")
+
+if(NOT EXISTS ${DKENGINE_DEPS_CACHE_FILE})
+    message(FATAL_ERROR "Cannot bootstrap dependencies.")
+endif()
+
+# cmake-format: off
+add_subdirectory(dependencies/src/vulkan)
+#vk_set_folder(ktx "third-party/ktx-software")
+#vk_set_folder(ktx_read "third-party/ktx-software")
+#vk_set_folder(ktx_version "third-party/ktx-software")
+#vk_set_folder(obj_basisu_cbind "third-party/ktx-software")
+#vk_set_folder(objUtil "third-party/ktx-software")
+#if(TARGET astcenc-avx2-static)
+#    lvk_set_folder(astcenc-avx2-static "third-party/ktx-software")
+#endif()
+# cmake-format: on
+
+if(WIN32)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
+
+add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
+
+include_directories(.)
+include_directories(dependencies/src)
+
+set_property(TARGET uninstall       PROPERTY FOLDER "third-party")
+
+# shared utils code
+#add_subdirectory(shared)
+#add_subdirectory(data)
+
+add_dependencies(SharedUtils Dependencies)
+
+# disable warnings in third-party code
+if(MSVC)
+    target_compile_options(assimp PRIVATE /wd4267)
+    target_compile_options(SPIRV  PRIVATE /wd4267)
+endif()
+
+add_subdirectory(Engine)
