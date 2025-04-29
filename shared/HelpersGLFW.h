@@ -1,10 +1,4 @@
 #pragma once
-//
-// Created by daisu on 29/04/2025.
-//
-
-#ifndef HELPERSGLFW_H
-#define HELPERSGLFW_H
 
 #include <stdio.h>
 
@@ -27,7 +21,3 @@
 #include <GLFW/glfw3native.h>
 
 GLFWwindow* initWindow(const char* windowTitle, uint32_t& outWidth, uint32_t& outHeight);
-
-
-
-#endif //HELPERSGLFW_H

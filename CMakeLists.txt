@@ -39,11 +39,11 @@ endif()
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 
 include_directories(.)
-#include_directories(dependencies/src)
-#include_directories(dependencies/src/taskflow)
+include_directories(dependencies/src)
+include_directories(dependencies/src/taskflow)
 include_directories(dependencies/src/glfw/include)
-#include_directories(dependencies/src/glm)
-#include_directories(dependencies/src/imgui)
+include_directories(dependencies/src/glm)
+include_directories(dependencies/src/imgui)
 
 # shared utils code
 add_subdirectory(shared)
