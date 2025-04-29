@@ -1,32 +1,33 @@
 ### C++ template
 # Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+/build/*/*.slo
+/build/*/*.lo
+/build/*/*.o
+/build/*/*.obj
 
 # Precompiled Headers
-*.gch
-*.pch
+/build/*/*.gch
+/build/*/*.pch
 
 # Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+/build/*/*.so
+/build/*/*.dylib
+/build/*/*.dll
+/bin/*.dll
 
 # Fortran module files
-*.mod
+/build/*/*.mod
 
 # Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+/build/*/*.lai
+/build/*/*.la
+/build/*/*.a
+/build/*/*.lib
 
 # Executables
-*.exe
-*.out
-*.app
+/bin/*.exe
+/build/*/*.out
+/build/*/*.app
 
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
