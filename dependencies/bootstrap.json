@@ -24,6 +24,47 @@
     }
   },
   {
+    "name": "glslang",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/KhronosGroup/glslang.git",
+      "revision": "15.1.0"
+    }
+  },
+  {
+    "name": "volk",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/zeux/volk",
+      "revision": "1.4.304"
+    }
+  },
+  {
+    "name": "ktx-software",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/KhronosGroup/KTX-Software.git",
+      "revision": "v4.3.2",
+      "recursive": false
+    }
+  },
+  {
+    "name": "minilog",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/corporateshark/minilog",
+      "revision": "784664e0ae28c9c1a01eece6a6c1a29855ac7856"
+    }
+  },
+  {
+    "name": "ldrutils",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/corporateshark/ldrutils",
+      "revision": "99f8697e6cb4af3cd037474636812357e637d5ed"
+    }
+  },
+  {
     "name": "taskflow",
     "source": {
       "type": "git",
