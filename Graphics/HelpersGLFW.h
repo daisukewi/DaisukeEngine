@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#include <glfw/include/GLFW/glfw3.h>
 
 // clang-format off
 #ifdef _WIN32
@@ -18,6 +18,6 @@
 #endif
 // clang-format on
 
-#include <GLFW/glfw3native.h>
+#include <glfw/include/GLFW/glfw3native.h>
 
 GLFWwindow* initWindow(const char* windowTitle, uint32_t& outWidth, uint32_t& outHeight);

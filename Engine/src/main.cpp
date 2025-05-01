@@ -11,8 +11,8 @@
 
 #include <glslang/glslang/Public/resource_limits_c.h>
 
-#include "../../Graphics/lvk/LVK.h"
-#include <../../Graphics/lvk/vulkan/VulkanUtils.h>
+#include <Graphics/lvk/LVK.h>
+#include <Graphics/lvk/vulkan/VulkanUtils.h>
 
 void saveSPIRVBinaryFile(const char* filename, const uint8_t* code, size_t size)
 {

@@ -32,7 +32,7 @@ set(MINILOG_RAW_OUTPUT     ON CACHE BOOL "")
 # cmake-format: on
 add_subdirectory(${DKE_DEPENDENCIES_DIR}/src/minilog "minilog")
 dke_set_folder(minilog "third-party")
-target_link_libraries(DkeGraphics PRIVATE minilog)
+target_link_libraries(DkeGraphics PUBLIC minilog)
 
 # cmake-format: off
 set(GLFW_BUILD_DOCS     OFF CACHE BOOL "")
@@ -83,13 +83,16 @@ target_link_libraries(DkeGraphics PUBLIC glslang SPIRV glslang-default-resource-
 #dke_set_folder(spirv-reflect-static "third-party")
 
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
-target_include_directories(DkeGraphics PRIVATE "${DKE_DEPENDENCIES_DIR}/src/glm/glm")
+target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/glm/glm")
 
 #include_directories(dependencies/src/imgui)
-target_include_directories(DkeGraphics PRIVATE "${DKE_DEPENDENCIES_DIR}/src/glslang/glslang/include")
+target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/glslang/glslang/include")
 #include_directories(dependencies/src/volk)
 #include_directories(dependencies/src/ktx-software/include)
 #include_directories(dependencies/src/imgui)
+
+include_directories(lvk)
+include_directories(lvk/vulkan)
 
 
 if(WIN32)

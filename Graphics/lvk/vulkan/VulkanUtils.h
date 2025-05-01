@@ -6,9 +6,10 @@
 
 #include <cstdint>
 #include <vector>
+
 #include "../LVK.h"
-#include "glslang/glslang/Include/glslang_c_interface.h"
-#include "glslang/glslang/Include/glslang_c_shader_types.h"
+#include <glslang/Include/glslang_c_interface.h>
+#include <glslang/Include/glslang_c_shader_types.h>
 
 namespace lvk {
 

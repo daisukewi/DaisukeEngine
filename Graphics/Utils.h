@@ -6,7 +6,7 @@
 #include <string.h>
 #include <string>
 
-#include <glslang/Include/glslang_c_interface.h>
+#include <glslang/glslang/Include/glslang_c_interface.h>
 
 bool endsWith(const char* s, const char* part);
 
