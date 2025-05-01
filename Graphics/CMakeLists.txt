@@ -77,10 +77,10 @@ dke_set_folder(glslang-default-resource-limits "third-party/glslang")
 target_link_libraries(DkeGraphics PUBLIC glslang SPIRV glslang-default-resource-limits)
 
 ## SPIRV-Reflect
-#set(SPIRV_REFLECT_EXECUTABLE OFF CACHE BOOL "")
-#set(SPIRV_REFLECT_STATIC_LIB ON  CACHE BOOL "")
-#add_subdirectory(${LVK_ROOT_DIR}/third-party/deps/src/SPIRV-Reflect "SPIRV-Reflect")
-#dke_set_folder(spirv-reflect-static "third-party")
+set(SPIRV_REFLECT_EXECUTABLE OFF CACHE BOOL "")
+set(SPIRV_REFLECT_STATIC_LIB ON  CACHE BOOL "")
+add_subdirectory(${DKE_DEPENDENCIES_DIR}/src/SPIRV-Reflect "SPIRV-Reflect")
+dke_set_folder(spirv-reflect-static "third-party")
 
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/glm/glm")
@@ -90,6 +90,7 @@ target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/glsla
 #include_directories(dependencies/src/volk)
 #include_directories(dependencies/src/ktx-software/include)
 #include_directories(dependencies/src/imgui)
+target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/SPIRV-Reflect/include")
 
 include_directories(lvk)
 include_directories(lvk/vulkan)

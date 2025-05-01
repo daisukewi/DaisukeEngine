@@ -18,8 +18,10 @@ void saveSPIRVBinaryFile(const char* filename, const uint8_t* code, size_t size)
 {
     FILE* f = fopen(filename, "wb");
 
-    if (!f)
+    if (!f) {
+        LLOGW("Failed to open file. Error: %d (%s)", errno, strerror(errno));
         return;
+    }
 
     fwrite(code, sizeof(uint8_t), size, f);
     fclose(f);
@@ -43,18 +45,28 @@ int main() {
     uint32_t w = 1280;
     uint32_t h = 800;
 
-    GLFWwindow* window = initWindow("Daisuke Engine", w, h);
+    // Init Log
+    minilog::initialize("log_thread.html", { .htmlLog = true });
 
     tf::Taskflow taskflow;
+    // tf::Task compileShadersTask = taskflow.emplace([]() {
+    //     minilog::threadNameSet("Shader Compiler");
+    //     minilog::callstackPushProc("std::thread->");
+    //     glslang_initialize_process();
+    //     testShaderCompilation("../data/main.vert", ".cache/Engine.vert.bin");
+    //     testShaderCompilation("../data/main.frag", ".cache/Engine.frag.bin");
+    //     glslang_finalize_process();
+    //     minilog::callstackPopProc();
+    // }).name("init");
 
-    tf::Task shadersTask = taskflow.emplace([] (tf::Subflow& subflow) {
-        tf::Task B1 = subflow.emplace([](){testShaderCompilation("../data/main.vert", ".cache/Engine.vert.bin");}).name("vertices");
-        tf::Task B2 = subflow.emplace([](){testShaderCompilation("../data/main.frag", ".cache/Engine.frag.bin");}).name("fragments");
-        tf::Task B3 = subflow.emplace([](){}).name("geometry");
-    }).name("Shaders");
+    minilog::callstackPushProc("MainThread()->");
 
-    tf::Task init = taskflow.emplace([](){ glslang_initialize_process(); }).name("init").precede(shadersTask);;
-    tf::Task stop = taskflow.emplace([](){ glslang_finalize_process(); }).name("stop").succeed(shadersTask);
+    GLFWwindow* window = initWindow("Daisuke Engine", w, h);
+
+    glslang_initialize_process();
+    testShaderCompilation("../data/main.vert", ".cache/Engine.vert.bin");
+    testShaderCompilation("../data/main.frag", ".cache/Engine.frag.bin");
+    glslang_finalize_process();
 
     {
         std::ofstream os("taskflow.dot");
@@ -71,5 +83,7 @@ int main() {
     glfwDestroyWindow(window);
     glfwTerminate();
 
+    minilog::callstackPopProc();
+    minilog::deinitialize();
     return 0;
 }
