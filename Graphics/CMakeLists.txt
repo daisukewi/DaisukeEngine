@@ -26,6 +26,16 @@ include_directories(.)
 target_include_directories(DkeGraphics PUBLIC ${DKE_GRAPHICS_ROOT_DIR})
 #target_include_directories(DkeGraphics PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../dependencies/src")
 
+add_library(DKEstb ${DKE_DEPENDENCIES_DIR}/patches/stb_impl/stb_image.c ${DKE_DEPENDENCIES_DIR}/patches/stb_impl/stb_image_resize2.c
+        ${DKE_DEPENDENCIES_DIR}/patches/stb_impl/stb_image_write.c)
+target_include_directories(DKEstb PUBLIC "../dependencies/src/stb")
+if(ANDROID)
+    target_compile_definitions(DKEstb PUBLIC "STBI_NO_SIMD=1")
+    target_compile_definitions(DKEstb PUBLIC "STBIR_NO_SIMD=1")
+endif()
+dke_set_folder(DKEstb "DKE")
+target_link_libraries(DkeGraphics PUBLIC DKEstb)
+
 # cmake-format: off
 set(MINILOG_BUILD_EXAMPLE OFF CACHE BOOL "")
 set(MINILOG_RAW_OUTPUT     ON CACHE BOOL "")
@@ -57,7 +67,23 @@ target_link_libraries(DkeGraphics PUBLIC glfw)
 
 # cmake-format: off
 add_subdirectory(${DKE_DEPENDENCIES_DIR}/src/ldrutils "LdrUtils")
+set(KTX_FEATURE_DOC            OFF CACHE BOOL "")
+set(KTX_FEATURE_GL_UPLOAD      OFF CACHE BOOL "")
+set(KTX_FEATURE_JNI            OFF CACHE BOOL "")
+set(KTX_FEATURE_KTX1            ON CACHE BOOL "")
+set(KTX_FEATURE_KTX2            ON CACHE BOOL "")
+set(KTX_FEATURE_LOADTEST_APPS  OFF CACHE BOOL "")
+set(KTX_FEATURE_STATIC_LIBRARY  ON CACHE BOOL "")
+set(KTX_FEATURE_TESTS          OFF CACHE BOOL "")
+set(KTX_FEATURE_TOOLS          OFF CACHE BOOL "")
+set(KTX_FEATURE_VK_UPLOAD      OFF CACHE BOOL "")
+add_subdirectory(${DKE_DEPENDENCIES_DIR}/src/ktx-software "ktx-software")
 add_subdirectory(${DKE_DEPENDENCIES_DIR}/src/vulkan "vulkan")
+dke_set_folder(ktx "third-party/ktx-software")
+dke_set_folder(ktx_read "third-party/ktx-software")
+dke_set_folder(ktx_version "third-party/ktx-software")
+dke_set_folder(obj_basisu_cbind "third-party/ktx-software")
+dke_set_folder(objUtil "third-party/ktx-software")
 
 # glslang
 set(ENABLE_GLSLANG_BINARIES OFF CACHE BOOL "")
@@ -87,8 +113,8 @@ target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/glm/g
 
 #include_directories(dependencies/src/imgui)
 target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/glslang/glslang/include")
+target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/ktx-software/include")
 #include_directories(dependencies/src/volk)
-#include_directories(dependencies/src/ktx-software/include)
 #include_directories(dependencies/src/imgui)
 target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/SPIRV-Reflect/include")
 
