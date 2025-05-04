@@ -97,6 +97,14 @@
     }
   },
   {
+    "name": "directXTK12",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/microsoft/DirectXTK12.git",
+      "revision": "mar2025"
+    }
+  },
+  {
     "name": "bistro/Exterior",
     "source": {
       "type": "archive",

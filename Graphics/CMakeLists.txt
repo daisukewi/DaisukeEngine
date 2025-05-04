@@ -9,14 +9,13 @@ file(GLOB_RECURSE HEADER_FILES LIST_DIRECTORIES false RELATIVE ${CMAKE_CURRENT_S
 
 add_library(DkeGraphics ${SRC_FILES} ${HEADER_FILES})
 
-set_property(TARGET DkeGraphics PROPERTY CXX_STANDARD 26)
-set_property(TARGET DkeGraphics PROPERTY CXX_STANDARD_REQUIRED ON)
-set_property(TARGET DkeGraphics PROPERTY BUILD_SHARED_LIBS ON)
-
 function(dke_set_cxxstd target cpp_version)
     set_property(TARGET ${target} PROPERTY CXX_STANDARD ${cpp_version})
     set_property(TARGET ${target} PROPERTY CXX_STANDARD_REQUIRED ON)
 endfunction()
+
+dke_set_cxxstd(DkeGraphics ${DKE_CXX_STANDARD})
+set_property(TARGET DkeGraphics PROPERTY BUILD_SHARED_LIBS ON)
 
 set(DKE_GRAPHICS_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(DKE_DEPENDENCIES_DIR ../dependencies)
@@ -118,10 +117,13 @@ target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/ktx-s
 #include_directories(dependencies/src/imgui)
 target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/SPIRV-Reflect/include")
 
+#add_subdirectory(${DKE_DEPENDENCIES_DIR}/src/DirectXTK12 "DirectXTK12")
+#target_link_libraries(DkeGraphics PRIVATE DirectXTK12)
+
 include_directories(lvk)
 include_directories(lvk/vulkan)
 
-
 if(WIN32)
     target_compile_definitions(DkeGraphics PUBLIC "NOMINMAX")
+    set_property(TARGET DkeGraphics PROPERTY VS_PACKAGE_REFERENCES "Microsoft.Direct3D.D3D12_1.615.1")
 endif()

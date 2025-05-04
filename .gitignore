@@ -256,3 +256,4 @@ cython_debug/
 
 .DS_Store
 .vs/
+log_thread.html

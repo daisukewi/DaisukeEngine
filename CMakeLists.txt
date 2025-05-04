@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 3.31)
 
 project(DaisukeEngine CXX C)
 
-set(CMAKE_CXX_STANDARD 26)
+if(MSVC)
+    set(DKE_CXX_STANDARD 20)
+else()
+    set(DKE_CXX_STANDARD 26)
+endif()
+
+set(CMAKE_CXX_STANDARD ${DKE_CXX_STANDARD})
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -13,6 +19,8 @@ set(DKENGINE_OUT_DIR "${CMAKE_SOURCE_DIR}/bin")
 
 function(dke_set_folder target folder_name)
     set_property(TARGET ${target} PROPERTY FOLDER ${folder_name})
+    set_property(TARGET ${target} PROPERTY CXX_STANDARD ${DKE_CXX_STANDARD})
+    set_property(TARGET ${target} PROPERTY CXX_STANDARD_REQUIRED ON)
 endfunction()
 
 if($ENV{CLION_IDE})
