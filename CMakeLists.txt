@@ -22,7 +22,6 @@ endif()
 find_package(Python3 COMPONENTS Interpreter)
 
 execute_process(COMMAND ${Python3_EXECUTABLE} deploy_deps.py WORKING_DIRECTORY ${DKENGINE_ROOT_DIR} COMMAND_ERROR_IS_FATAL ANY)
-#execute_process(COMMAND ${Python3_EXECUTABLE} deploy_deps.py WORKING_DIRECTORY ${DKENGINE_ROOT_DIR}/dependencies/src/vulkan COMMAND_ERROR_IS_FATAL ANY)
 
 add_custom_command(COMMAND ${Python3_EXECUTABLE} deploy_deps.py OUTPUT ${DKENGINE_DEPS_CACHE_FILE}
         DEPENDS "${DKENGINE_ROOT_DIR}/dependencies/bootstrap.json" WORKING_DIRECTORY ${DKENGINE_ROOT_DIR})
@@ -49,7 +48,7 @@ add_dependencies(DkeGraphics Dependencies)
 
 # disable warnings in third-party code
 if(MSVC)
-    target_compile_options(assimp PRIVATE /wd4267)
+    #target_compile_options(assimp PRIVATE /wd4267)
     target_compile_options(SPIRV  PRIVATE /wd4267)
 endif()
 
