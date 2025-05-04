@@ -17,15 +17,11 @@ set(DKENGINE_DEPS_ROOT_DIR "${DKENGINE_ROOT_DIR}/dependencies")
 set(DKENGINE_DEPS_CACHE_FILE "${DKENGINE_DEPS_ROOT_DIR}/.bootstrap.json")
 set(DKENGINE_OUT_DIR "${CMAKE_SOURCE_DIR}/bin")
 
-function(dke_set_folder target folder_name)
-    set_property(TARGET ${target} PROPERTY FOLDER ${folder_name})
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD ${DKE_CXX_STANDARD})
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD_REQUIRED ON)
-endfunction()
-
 if($ENV{CLION_IDE})
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${DKENGINE_OUT_DIR})
 endif()
+
+include(CMake/CommonMacros.txt)
 
 find_package(Python3 COMPONENTS Interpreter)
 

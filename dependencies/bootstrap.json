@@ -48,6 +48,14 @@
     }
   },
   {
+    "name": "vma",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git",
+      "revision": "v3.2.1"
+    }
+  },
+  {
     "name": "ktx-software",
     "source": {
       "type": "git",
@@ -94,6 +102,14 @@
       "type": "git",
       "url": "https://github.com/nothings/stb.git",
       "revision": "f0569113c93ad095470c54bf34a17b36646bbbb5"
+    }
+  },
+  {
+    "name": "tracy",
+    "source": {
+      "type": "git",
+      "url": "https://github.com/wolfpld/tracy.git",
+      "revision": "v0.11.1"
     }
   },
   {

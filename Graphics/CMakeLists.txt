@@ -9,12 +9,7 @@ file(GLOB_RECURSE HEADER_FILES LIST_DIRECTORIES false RELATIVE ${CMAKE_CURRENT_S
 
 add_library(DkeGraphics ${SRC_FILES} ${HEADER_FILES})
 
-function(dke_set_cxxstd target cpp_version)
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD ${cpp_version})
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD_REQUIRED ON)
-endfunction()
-
-dke_set_cxxstd(DkeGraphics ${DKE_CXX_STANDARD})
+dke_setup_target(DkeGraphics)
 set_property(TARGET DkeGraphics PROPERTY BUILD_SHARED_LIBS ON)
 
 set(DKE_GRAPHICS_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -22,8 +17,27 @@ set(DKE_DEPENDENCIES_DIR ../dependencies)
 
 include_directories(.)
 
+add_compile_options("$<$<CONFIG:DEBUG>:-DDEBUG>")
+
+message(STATUS "Generator : " ${CMAKE_GENERATOR})
+message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
+
 target_include_directories(DkeGraphics PUBLIC ${DKE_GRAPHICS_ROOT_DIR})
 #target_include_directories(DkeGraphics PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../dependencies/src")
+
+# enable multithreaded builds for Visual Studio
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+
+add_definitions("-DTRACY_ENABLE=1")
+add_subdirectory(${DKE_DEPENDENCIES_DIR}/src/tracy "tracy")
+dke_set_folder(TracyClient "third-party")
+
+target_compile_definitions(DkeGraphics PUBLIC "LVK_WITH_TRACY=1")
+if(DKE_WITH_TRACY_GPU)
+    target_compile_definitions(DkeGraphics PUBLIC "LVK_WITH_TRACY_GPU=1")
+endif()
+
+target_compile_definitions(DkeGraphics PUBLIC "LVK_WITH_GLFW=1")
 
 add_library(DKEstb ${DKE_DEPENDENCIES_DIR}/patches/stb_impl/stb_image.c ${DKE_DEPENDENCIES_DIR}/patches/stb_impl/stb_image_resize2.c
         ${DKE_DEPENDENCIES_DIR}/patches/stb_impl/stb_image_write.c)
@@ -99,7 +113,6 @@ dke_set_folder(OSDependent        "third-party/glslang")
 dke_set_folder(SPIRV              "third-party/glslang")
 dke_set_folder(glslang-default-resource-limits "third-party/glslang")
 # cmake-format: on
-target_link_libraries(DkeGraphics PUBLIC glslang SPIRV glslang-default-resource-limits)
 
 ## SPIRV-Reflect
 set(SPIRV_REFLECT_EXECUTABLE OFF CACHE BOOL "")
@@ -107,23 +120,50 @@ set(SPIRV_REFLECT_STATIC_LIB ON  CACHE BOOL "")
 add_subdirectory(${DKE_DEPENDENCIES_DIR}/src/SPIRV-Reflect "SPIRV-Reflect")
 dke_set_folder(spirv-reflect-static "third-party")
 
+find_package(Vulkan REQUIRED)
+
+#target_link_libraries(DkeGraphics PRIVATE LVKLibrary)
+target_link_libraries(DkeGraphics PRIVATE glslang SPIRV glslang-default-resource-limits)
+target_link_libraries(DkeGraphics PRIVATE spirv-reflect-static)
+
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/glm/glm")
 
 #include_directories(dependencies/src/imgui)
 target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/glslang/glslang/include")
 target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/ktx-software/include")
-#include_directories(dependencies/src/volk)
+
+target_link_libraries(DkeGraphics PUBLIC Vulkan::Vulkan)
+
+target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/volk")
+target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/vma/include")
 #include_directories(dependencies/src/imgui)
 target_include_directories(DkeGraphics PUBLIC "${DKE_DEPENDENCIES_DIR}/src/SPIRV-Reflect/include")
+
+target_link_libraries(DkeGraphics PUBLIC TracyClient)
 
 #add_subdirectory(${DKE_DEPENDENCIES_DIR}/src/DirectXTK12 "DirectXTK12")
 #target_link_libraries(DkeGraphics PRIVATE DirectXTK12)
 
-include_directories(lvk)
-include_directories(lvk/vulkan)
-
 if(WIN32)
-    target_compile_definitions(DkeGraphics PUBLIC "NOMINMAX")
+    target_compile_definitions(DkeGraphics PUBLIC "-DVK_USE_PLATFORM_WIN32_KHR=1")
+    target_compile_definitions(DkeGraphics PUBLIC "-DNOMINMAX")
+    add_definitions("-DNOMINMAX")
     set_property(TARGET DkeGraphics PROPERTY VS_PACKAGE_REFERENCES "Microsoft.Direct3D.D3D12_1.615.1")
+elseif(ANDROID)
+    target_compile_definitions(DkeGraphics PUBLIC "-DVK_USE_PLATFORM_ANDROID_KHR=1")
+elseif(UNIX AND NOT APPLE)
+    if(WAYLAND_FOUND)
+        target_compile_definitions(DkeGraphics PUBLIC "-DVK_USE_PLATFORM_WAYLAND_KHR=1")
+    else()
+        target_compile_definitions(DkeGraphics PUBLIC "-DVK_USE_PLATFORM_XLIB_KHR=1")
+    endif()
+elseif(APPLE)
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        target_compile_definitions(DkeGraphics PUBLIC "-DVK_USE_PLATFORM_MACOS_MVK=1")
+    endif()
+endif()
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(DkeGraphics PRIVATE "-Wno-nullability-completeness")
 endif()
