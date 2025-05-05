@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.31)
 project(DaisukeEngine CXX C)
 
 if(MSVC)
-    set(DKE_CXX_STANDARD 20)
+    set(DKE_CXX_STANDARD 23)
 else()
     set(DKE_CXX_STANDARD 26)
 endif()
